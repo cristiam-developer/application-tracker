@@ -1,4 +1,16 @@
-export default function BoardPage() {
+import { getApplicationsForBoard } from "@/lib/queries/applications";
+import { KanbanBoard } from "@/components/board/kanban-board";
+
+export const dynamic = "force-dynamic";
+
+export default async function BoardPage() {
+  const applications = await getApplicationsForBoard();
+
+  const serialized = applications.map((app) => ({
+    ...app,
+    applicationDate: app.applicationDate.toISOString(),
+  }));
+
   return (
     <div className="space-y-6">
       <div>
@@ -7,9 +19,7 @@ export default function BoardPage() {
           Kanban-style view of your application pipeline.
         </p>
       </div>
-      <div className="rounded-lg border border-border bg-card p-8 text-center text-muted-foreground">
-        Kanban board will be implemented in Phase 4.
-      </div>
+      <KanbanBoard applications={serialized} />
     </div>
   );
 }
