@@ -57,3 +57,67 @@ export const PLATFORM_CONFIG: Record<Platform, { label: string }> = {
   company_website: { label: "Company Website" },
   other: { label: "Other" },
 };
+
+export const ACTIVE_STATUSES = [
+  "applied",
+  "phone_screen",
+  "interview",
+  "offer",
+] as const;
+
+export const STATUS_CHART_COLORS: Record<ApplicationStatus, string> = {
+  applied: "#3b82f6",
+  phone_screen: "#eab308",
+  interview: "#a855f7",
+  offer: "#22c55e",
+  rejected: "#ef4444",
+  accepted: "#10b981",
+  withdrawn: "#6b7280",
+};
+
+export const DASHBOARD_PERIODS = ["7d", "30d", "90d", "all"] as const;
+export type DashboardPeriod = (typeof DASHBOARD_PERIODS)[number];
+
+export const PERIOD_LABELS: Record<DashboardPeriod, string> = {
+  "7d": "7 days",
+  "30d": "30 days",
+  "90d": "90 days",
+  all: "All time",
+};
+
+export type StatsResponse = {
+  summary: {
+    total: number;
+    active: number;
+    interviews: number;
+    offers: number;
+    responseRate: number;
+  };
+  byStatus: Array<{
+    status: ApplicationStatus;
+    label: string;
+    count: number;
+    color: string;
+  }>;
+  timeline: Array<{
+    weekStart: string;
+    count: number;
+  }>;
+  topCompanies: Array<{
+    company: string;
+    count: number;
+  }>;
+  byPlatform: Array<{
+    platform: Platform;
+    label: string;
+    count: number;
+  }>;
+  recentApplications: Array<{
+    id: string;
+    companyName: string;
+    positionTitle: string;
+    status: string;
+    applicationDate: string;
+    platform: string;
+  }>;
+};
