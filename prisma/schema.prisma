@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Application {
+  id              String   @id @default(cuid())
+  companyName     String
+  positionTitle   String
+  status          String   @default("applied") // applied, phone_screen, interview, offer, rejected, accepted, withdrawn
+  platform        String   @default("other") // linkedin, indeed, greenhouse, lever, workday, company_website, other
+  applicationDate DateTime @default(now())
+  lastUpdated     DateTime @updatedAt
+  url             String?
+  salary          String?
+  location        String?
+  jobType         String? // full_time, part_time, contract, internship
+  notes           String?
+  source          String   @default("manual") // manual, gmail_sync
+  emailMessageId  String?  @unique
+  contactName     String?
+  contactEmail    String?
+  createdAt       DateTime @default(now())
+
+  statusHistory StatusChange[]
+  tags          ApplicationTag[]
+
+  @@index([status])
+  @@index([companyName])
+  @@index([applicationDate])
+}
+
+model StatusChange {
+  id            String   @id @default(cuid())
+  applicationId String
+  fromStatus    String
+  toStatus      String
+  changedAt     DateTime @default(now())
+  notes         String?
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+}
+
+model SavedJob {
+  id          String   @id @default(cuid())
+  title       String
+  company     String
+  location    String?
+  salary      String?
+  url         String   @unique
+  source      String // jsearch, adzuna, indeed, glassdoor
+  sourceId    String?
+  description String?
+  savedAt     DateTime @default(now())
+  applied     Boolean  @default(false)
+}
+
+model Tag {
+  id    String @id @default(cuid())
+  name  String @unique
+  color String @default("#6366f1")
+
+  applications ApplicationTag[]
+}
+
+model ApplicationTag {
+  applicationId String
+  tagId         String
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  tag         Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([applicationId, tagId])
+  @@index([applicationId])
+  @@index([tagId])
+}
+
+model ResumeProfile {
+  id         String   @id @default(cuid())
+  fileName   String
+  uploadedAt DateTime @default(now())
+  rawText    String?
+  skills     String? // JSON string array
+  jobTitles  String? // JSON string array
+  isActive   Boolean  @default(true)
+}
+
+model GmailSyncState {
+  id             String    @id @default("singleton")
+  lastSyncAt     DateTime?
+  lastHistoryId  String?
+  syncInProgress Boolean   @default(false)
+  totalSynced    Int       @default(0)
+}
+
+model Setting {
+  key   String @id
+  value String
+}
