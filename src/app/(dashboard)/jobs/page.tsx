@@ -1,4 +1,9 @@
+import { SearchResults } from "@/components/jobs/search-results";
+import { getAvailableSources } from "@/lib/jobs/aggregator";
+
 export default function JobSearchPage() {
+  const availableSources = getAvailableSources();
+
   return (
     <div className="space-y-6">
       <div>
@@ -7,9 +12,7 @@ export default function JobSearchPage() {
           Search for jobs across multiple platforms.
         </p>
       </div>
-      <div className="rounded-lg border border-border bg-card p-8 text-center text-muted-foreground">
-        Job search will be implemented in Phase 6.
-      </div>
+      <SearchResults availableSources={availableSources} />
     </div>
   );
 }
