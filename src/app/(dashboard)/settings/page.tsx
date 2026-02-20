@@ -1,4 +1,17 @@
-export default function SettingsPage() {
+export const dynamic = "force-dynamic";
+
+import { db } from "@/lib/db";
+import { getGmailConnectionStatus } from "@/lib/queries/settings";
+import { GmailSettingsCard } from "@/components/settings/gmail-settings-card";
+import { SettingsSyncSection } from "@/components/settings/settings-sync-section";
+
+export default async function SettingsPage() {
+  const [gmailStatus, syncState, pendingCount] = await Promise.all([
+    getGmailConnectionStatus(),
+    db.gmailSyncState.findUnique({ where: { id: "singleton" } }),
+    db.setting.count({ where: { key: { startsWith: "pending_review_" } } }),
+  ]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -7,9 +20,20 @@ export default function SettingsPage() {
           Configure Gmail sync, resume profile, and preferences.
         </p>
       </div>
-      <div className="rounded-lg border border-border bg-card p-8 text-center text-muted-foreground">
-        Settings will be implemented in Phase 5.
-      </div>
+      <GmailSettingsCard
+        connected={gmailStatus.connected}
+        email={gmailStatus.email}
+      />
+      {gmailStatus.connected && (
+        <SettingsSyncSection
+          initialSyncStatus={{
+            lastSyncAt: syncState?.lastSyncAt?.toISOString() ?? null,
+            syncInProgress: syncState?.syncInProgress ?? false,
+            totalSynced: syncState?.totalSynced ?? 0,
+            pendingReviewCount: pendingCount,
+          }}
+        />
+      )}
     </div>
   );
 }
