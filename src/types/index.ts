@@ -95,6 +95,41 @@ export type BoardApplication = {
   location: string | null;
 };
 
+export const JOB_SOURCES = [
+  "jsearch",
+  "adzuna",
+  "indeed",
+  "glassdoor",
+] as const;
+
+export type JobSource = (typeof JOB_SOURCES)[number];
+
+export const SOURCE_CONFIG: Record<
+  JobSource,
+  { label: string; color: string; bgColor: string }
+> = {
+  jsearch: {
+    label: "JSearch",
+    color: "text-blue-400",
+    bgColor: "bg-blue-500/20",
+  },
+  adzuna: {
+    label: "Adzuna",
+    color: "text-green-400",
+    bgColor: "bg-green-500/20",
+  },
+  indeed: {
+    label: "Indeed",
+    color: "text-purple-400",
+    bgColor: "bg-purple-500/20",
+  },
+  glassdoor: {
+    label: "Glassdoor",
+    color: "text-orange-400",
+    bgColor: "bg-orange-500/20",
+  },
+};
+
 export type StatsResponse = {
   summary: {
     total: number;

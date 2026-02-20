@@ -4,6 +4,7 @@ import {
   PLATFORMS,
   JOB_TYPES,
   DASHBOARD_PERIODS,
+  JOB_SOURCES,
 } from "@/types";
 
 export const createApplicationSchema = z.object({
@@ -59,3 +60,35 @@ export const statsQuerySchema = z.object({
 });
 
 export type StatsQueryParams = z.infer<typeof statsQuerySchema>;
+
+export const searchJobsSchema = z.object({
+  query: z.string().min(1, "Search query is required").max(200),
+  location: z.string().max(200).optional(),
+  sources: z
+    .array(z.enum(JOB_SOURCES))
+    .min(1, "At least one source is required")
+    .default(["jsearch", "adzuna"]),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+
+export type SearchJobsParams = z.infer<typeof searchJobsSchema>;
+
+export const saveJobSchema = z.object({
+  title: z.string().min(1).max(200),
+  company: z.string().min(1).max(200),
+  location: z.string().max(200).optional().nullable(),
+  salary: z.string().max(200).optional().nullable(),
+  url: z.string().url().max(2000),
+  source: z.enum(JOB_SOURCES),
+  sourceId: z.string().max(200).optional().nullable(),
+  description: z.string().max(10000).optional().nullable(),
+});
+
+export type SaveJobInput = z.infer<typeof saveJobSchema>;
+
+export const listSavedJobsSchema = z.object({
+  filter: z.enum(["all", "applied", "not_applied"]).default("all"),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});

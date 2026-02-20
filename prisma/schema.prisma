@@ -99,6 +99,20 @@ model GmailSyncState {
   totalSynced    Int       @default(0)
 }
 
+model SearchCache {
+  id        String   @id @default(cuid())
+  queryHash String   @unique
+  query     String
+  location  String?
+  sources   String
+  results   String   // JSON
+  cachedAt  DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([queryHash])
+  @@index([expiresAt])
+}
+
 model Setting {
   key   String @id
   value String
