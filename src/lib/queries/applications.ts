@@ -46,6 +46,21 @@ export async function getApplications(params: ListApplicationsParams) {
   };
 }
 
+export async function getApplicationsForBoard() {
+  return db.application.findMany({
+    select: {
+      id: true,
+      companyName: true,
+      positionTitle: true,
+      status: true,
+      platform: true,
+      applicationDate: true,
+      location: true,
+    },
+    orderBy: { applicationDate: "desc" },
+  });
+}
+
 export async function getApplicationById(id: string) {
   return db.application.findUnique({
     where: { id },

@@ -85,6 +85,16 @@ export const PERIOD_LABELS: Record<DashboardPeriod, string> = {
   all: "All time",
 };
 
+export type BoardApplication = {
+  id: string;
+  companyName: string;
+  positionTitle: string;
+  status: string;
+  platform: string;
+  applicationDate: string;
+  location: string | null;
+};
+
 export type StatsResponse = {
   summary: {
     total: number;
