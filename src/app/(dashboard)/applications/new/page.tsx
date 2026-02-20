@@ -1,3 +1,5 @@
+import { ApplicationForm } from "@/components/applications/application-form";
+
 export default function NewApplicationPage() {
   return (
     <div className="space-y-6">
@@ -7,8 +9,8 @@ export default function NewApplicationPage() {
           Manually add a new job application.
         </p>
       </div>
-      <div className="rounded-lg border border-border bg-card p-8 text-center text-muted-foreground">
-        Application form will be implemented in Phase 2.
+      <div className="max-w-3xl">
+        <ApplicationForm />
       </div>
     </div>
   );
