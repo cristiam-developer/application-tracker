@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { APPLICATION_STATUSES, PLATFORMS, JOB_TYPES } from "@/types";
+import {
+  APPLICATION_STATUSES,
+  PLATFORMS,
+  JOB_TYPES,
+  DASHBOARD_PERIODS,
+} from "@/types";
 
 export const createApplicationSchema = z.object({
   companyName: z.string().min(1, "Company name is required").max(200),
@@ -48,3 +53,9 @@ export type CreateApplicationInput = z.input<typeof createApplicationSchema>;
 export type CreateApplicationOutput = z.output<typeof createApplicationSchema>;
 export type UpdateApplicationInput = z.infer<typeof updateApplicationSchema>;
 export type ListApplicationsParams = z.infer<typeof listApplicationsSchema>;
+
+export const statsQuerySchema = z.object({
+  period: z.enum(DASHBOARD_PERIODS).default("30d"),
+});
+
+export type StatsQueryParams = z.infer<typeof statsQuerySchema>;
